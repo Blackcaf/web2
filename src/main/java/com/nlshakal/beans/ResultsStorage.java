@@ -8,15 +8,15 @@ import java.util.List;
 public class ResultsStorage implements Serializable {
   private final List<ResultBean> results = new ArrayList<>();
 
-  public synchronized void addResult(ResultBean result) {
+  public void addResult(ResultBean result) {
     results.add(0, result);
   }
 
-  public synchronized List<ResultBean> getResults() {
+  public List<ResultBean> getResults() {
     return Collections.unmodifiableList(results);
   }
 
-  public synchronized void clear() {
+  public void clear() {
     results.clear();
   }
 }

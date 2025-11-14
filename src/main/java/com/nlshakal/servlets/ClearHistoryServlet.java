@@ -2,7 +2,6 @@ package com.nlshakal.servlets;
 
 import com.nlshakal.beans.ResultsStorage;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
@@ -13,8 +12,8 @@ public class ClearHistoryServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    ServletContext context = getServletContext();
-    ResultsStorage storage = (ResultsStorage) context.getAttribute("results");
+    HttpSession session = request.getSession();
+    ResultsStorage storage = (ResultsStorage) session.getAttribute("results");
 
     if (storage != null) {
       storage.clear();

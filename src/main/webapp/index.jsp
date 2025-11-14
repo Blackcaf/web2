@@ -95,7 +95,7 @@
             <form action="${pageContext.request.contextPath}/controller" method="POST" style="margin: 0;">
                 <input type="hidden" name="action" value="clear">
                 <button type="submit" class="clear-btn" onclick="return confirm('Вы уверены, что хотите очистить всю историю?')">
-                    🗑️ Очистить историю
+                    Очистить историю
                 </button>
             </form>
         </div>
@@ -112,7 +112,7 @@
                 </tr>
                 </thead>
                 <tbody id="results-body">
-                <c:forEach items="${applicationScope.results.results}" var="result">
+                <c:forEach items="${sessionScope.results.results}" var="result">
                     <tr class="${result.hit ? 'hit' : 'miss'}">
                         <td>${result.x}</td>
                         <td title="${result.y}">${result.y.length() > 8 ? result.y.substring(0, 8).concat('...') : result.y}</td>
@@ -126,7 +126,7 @@
                 </c:forEach>
                 </tbody>
             </table>
-            <div id="empty-state" class="empty-state" style="display: ${empty applicationScope.results.results ? 'block' : 'none'}">
+            <div id="empty-state" class="empty-state" style="display: ${empty sessionScope.results.results ? 'block' : 'none'}">
                 <p>Пока нет результатов</p>
                 <small>Добавьте точку для начала работы</small>
             </div>
@@ -149,7 +149,7 @@
 
 <script>
     window.applicationResults = [
-        <c:forEach items="${applicationScope.results.results}" var="result" varStatus="status">
+        <c:forEach items="${sessionScope.results.results}" var="result" varStatus="status">
         {
             x: "${result.x}",
             y: "${result.y}",

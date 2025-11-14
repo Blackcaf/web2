@@ -4,7 +4,6 @@ import com.nlshakal.beans.ResultBean;
 import com.nlshakal.beans.ResultsStorage;
 import com.nlshakal.utils.HitChecker;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import java.io.IOException;
@@ -48,12 +47,12 @@ public class AreaCheckServlet extends HttpServlet {
           executionTimeMs
       );
 
-      ServletContext context = getServletContext();
-      ResultsStorage storage = (ResultsStorage) context.getAttribute("results");
+      HttpSession session = request.getSession();
+      ResultsStorage storage = (ResultsStorage) session.getAttribute("results");
 
       if (storage == null) {
         storage = new ResultsStorage();
-        context.setAttribute("results", storage);
+        session.setAttribute("results", storage);
       }
 
       storage.addResult(result);
