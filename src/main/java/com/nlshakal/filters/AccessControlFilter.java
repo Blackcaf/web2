@@ -18,30 +18,20 @@ public class AccessControlFilter implements Filter {
     String contextPath = httpRequest.getContextPath();
     String path = uri.substring(contextPath.length());
 
-    boolean isAllowed = path.equals("/") ||
-                       path.equals("/controller") ||
-                       path.startsWith("/styles.css") ||
-                       path.startsWith("/script.js") ||
-                       path.startsWith("/canvas.js") ||
-                       path.equals("/clearHistory") ||
-                       path.equals("/weather") ||
-                       path.equals("/index.jsp");
-
-    if (path.equals("/result.jsp") ||
-        path.equals("/error.jsp") ||
-        path.equals("/areaCheck")) {
-      sendError(httpRequest, httpResponse, 403, "Доступ запрещен",
-               "Прямой доступ к этому ресурсу запрещен. Все запросы должны идти через /controller");
+    if (path.startsWith("/styles.css") ||
+        path.startsWith("/script.js") ||
+        path.startsWith("/canvas.js") ||
+        path.equals("/") ||
+        path.equals("/index.jsp") ||
+        path.equals("/controller") ||
+        path.equals("/clearHistory") ||
+        path.equals("/weather")) {
+      chain.doFilter(request, response);
       return;
     }
 
-    if (!isAllowed) {
-      sendError(httpRequest, httpResponse, 404, "Страница не найдена",
-               "Запрашиваемый ресурс не найден");
-      return;
-    }
-
-    chain.doFilter(request, response);
+    sendError(httpRequest, httpResponse, 404, "Страница не найдена",
+             "Запрашиваемый ресурс не найден");
   }
 
   private void sendError(HttpServletRequest request, HttpServletResponse response,

@@ -64,8 +64,6 @@ public class WeatherServlet extends HttpServlet {
     private Map<String, Object> parseWindData(String html) {
         Map<String, Object> result = new HashMap<>();
 
-        // Ищем паттерн: число м/с, направление
-        // Пример: >2,8 м/с, З</li>
         Pattern pattern = Pattern.compile(">(\\d+(?:,\\d+)?)\\s*м/с,\\s*([А-Я-]+)<");
         Matcher matcher = pattern.matcher(html);
 

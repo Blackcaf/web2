@@ -7,8 +7,6 @@
 
     <display-name>Web Lab 2</display-name>
 
-    <!-- Фильтры -->
-    <!-- Фильтр контроля доступа - блокирует все кроме разрешенных URL -->
     <filter>
         <filter-name>AccessControlFilter</filter-name>
         <filter-class>com.nlshakal.filters.AccessControlFilter</filter-class>
@@ -18,7 +16,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- Фильтр проверки HTTP методов -->
     <filter>
         <filter-name>MethodFilter</filter-name>
         <filter-class>com.nlshakal.filters.MethodFilter</filter-class>
@@ -28,7 +25,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- Фильтр валидации параметров -->
     <filter>
         <filter-name>ValidationFilter</filter-name>
         <filter-class>com.nlshakal.filters.ValidationFilter</filter-class>
@@ -42,7 +38,6 @@
         <url-pattern>/areaCheck</url-pattern>
     </filter-mapping>
 
-    <!-- Конфигурация ControllerServlet -->
     <servlet>
         <servlet-name>ControllerServlet</servlet-name>
         <servlet-class>com.nlshakal.servlets.ControllerServlet</servlet-class>
@@ -52,7 +47,6 @@
         <url-pattern>/controller</url-pattern>
     </servlet-mapping>
 
-    <!-- Конфигурация AreaCheckServlet -->
     <servlet>
         <servlet-name>AreaCheckServlet</servlet-name>
         <servlet-class>com.nlshakal.servlets.AreaCheckServlet</servlet-class>
@@ -62,7 +56,6 @@
         <url-pattern>/areaCheck</url-pattern>
     </servlet-mapping>
 
-    <!-- Конфигурация ClearHistoryServlet -->
     <servlet>
         <servlet-name>ClearHistoryServlet</servlet-name>
         <servlet-class>com.nlshakal.servlets.ClearHistoryServlet</servlet-class>
@@ -72,14 +65,41 @@
         <url-pattern>/clearHistory</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>WeatherServlet</servlet-name>
+        <servlet-class>com.nlshakal.servlets.WeatherServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WeatherServlet</servlet-name>
+        <url-pattern>/weather</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-    <!-- Блокируем прямой доступ к JSP страницам из WEB-INF -->
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>JSP Pages</web-resource-name>
+            <web-resource-name>Protected JSP Pages</web-resource-name>
+            <url-pattern>/result.jsp</url-pattern>
+            <url-pattern>/error.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Internal Servlets</web-resource-name>
+            <url-pattern>/areaCheck</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>WEB-INF Directory</web-resource-name>
             <url-pattern>/WEB-INF/*</url-pattern>
         </web-resource-collection>
         <auth-constraint/>

@@ -5,7 +5,6 @@ const CONFIG = {
     scale: 45
 };
 
-// Маппинг направлений ветра
 const WIND_DIRECTIONS = {
     'С': { dx: 0, dy: 1 },      // Север
     'Ю': { dx: 0, dy: -1 },     // Юг
@@ -17,14 +16,11 @@ const WIND_DIRECTIONS = {
     'Ю-З': { dx: -0.707, dy: -0.707 }  // Юго-Запад
 };
 
-// Кэш данных о ветре
 let cachedWindData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(initializeCanvas, 200);
-    // Загружаем данные о ветре при загрузке страницы
     updateWindData();
-    // Обновляем каждые 5 секунд
     setInterval(updateWindData, 5000);
 });
 
@@ -291,60 +287,48 @@ function handleCanvasClick(event) {
         return;
     }
 
-    // Получаем данные о ветре и смещаем точку
     applyWindOffset(mathX, mathY, r);
 }
 
 async function applyWindOffset(x, y, r) {
-    // Используем кэшированные данные, если они есть
     if (cachedWindData && cachedWindData.speed && cachedWindData.direction) {
         const speed = cachedWindData.speed;
         const direction = cachedWindData.direction;
 
-        // Получаем вектор смещения
         const windVector = WIND_DIRECTIONS[direction];
 
         if (windVector) {
-            // Смещение в пикселях (скорость ветра * 10 = количество пикселей)
             const offsetPixelsX = windVector.dx * speed * 10;
             const offsetPixelsY = windVector.dy * speed * 10;
 
-            // Конвертируем пиксели в математические координаты
             const offsetX = offsetPixelsX / CONFIG.scale;
             const offsetY = offsetPixelsY / CONFIG.scale;
 
-            // Применяем смещение
             const newX = x + offsetX;
             const newY = y + offsetY;
 
-            // Показываем информацию пользователю
             console.log(`Ветер: ${speed} м/с, направление: ${direction}`);
             console.log(`Исходная точка: (${x.toFixed(2)}, ${y.toFixed(2)})`);
             console.log(`Смещенная точка: (${newX.toFixed(2)}, ${newY.toFixed(2)})`);
             console.log(`Смещение: (${offsetX.toFixed(2)}, ${offsetY.toFixed(2)})`);
 
-            // Визуализируем смещение (без задержки)
             visualizeWindShift(x, y, newX, newY);
 
-            // Отправляем смещенную точку на сервер
             submitPoint(newX, newY, r);
         } else {
             console.warn('Неизвестное направление ветра:', direction);
             submitPoint(x, y, r);
         }
     } else {
-        // Если данных нет, отправляем без смещения
         console.warn('Данные о ветре недоступны, отправка без смещения');
         submitPoint(x, y, r);
     }
 }
 
 function displayWindInfo(speed, direction) {
-    // Проверяем, есть ли уже элемент для отображения информации о ветре
     let windInfoElement = document.getElementById('windInfo');
 
     if (!windInfoElement) {
-        // Создаем новый элемент
         windInfoElement = document.createElement('div');
         windInfoElement.id = 'windInfo';
         windInfoElement.style.cssText = `
@@ -364,7 +348,6 @@ function displayWindInfo(speed, direction) {
         document.body.appendChild(windInfoElement);
     }
 
-    // Направления на русском
     const directionNames = {
         'С': 'Север',
         'Ю': 'Юг',
@@ -379,7 +362,6 @@ function displayWindInfo(speed, direction) {
     const directionName = directionNames[direction] || direction;
     const offset = (speed * 10 / CONFIG.scale).toFixed(2);
 
-    // Получаем текущее время
     const now = new Date();
     const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
@@ -404,7 +386,6 @@ function displayWindInfo(speed, direction) {
 }
 
 function visualizeWindShift(x1, y1, x2, y2) {
-    // Рисуем стрелку от исходной точки к смещенной
     const pixelX1 = CONFIG.center + x1 * CONFIG.scale;
     const pixelY1 = CONFIG.center - y1 * CONFIG.scale;
     const pixelX2 = CONFIG.center + x2 * CONFIG.scale;
@@ -412,13 +393,11 @@ function visualizeWindShift(x1, y1, x2, y2) {
 
     ctx.save();
 
-    // Рисуем исходную точку (синяя)
     ctx.fillStyle = '#2196F3';
     ctx.beginPath();
     ctx.arc(pixelX1, pixelY1, 4, 0, 2 * Math.PI);
     ctx.fill();
 
-    // Рисуем стрелку смещения
     ctx.strokeStyle = '#FF5722';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
@@ -427,7 +406,6 @@ function visualizeWindShift(x1, y1, x2, y2) {
     ctx.lineTo(pixelX2, pixelY2);
     ctx.stroke();
 
-    // Рисуем наконечник стрелки
     const angle = Math.atan2(pixelY2 - pixelY1, pixelX2 - pixelX1);
     const arrowLength = 10;
 

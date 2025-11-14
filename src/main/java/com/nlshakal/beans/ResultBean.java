@@ -10,8 +10,7 @@ public class ResultBean implements Serializable {
   private String currentTime;
   private String executionTime;
 
-  public ResultBean(String x, String y, String r, boolean hit,
-                    String currentTime, String executionTime) {
+  public ResultBean(String x, String y, String r, boolean hit, String currentTime, String executionTime) {
     this.x = x;
     this.y = y;
     this.r = r;
