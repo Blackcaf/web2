@@ -131,12 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (form) {
             form.onsubmit = e => {
+                e.preventDefault(); // Всегда предотвращаем стандартную отправку
+
                 const isXValid = validate('x', true);
                 const isYValid = validate('y', true);
                 const isRValid = validate('r', true);
 
                 if (!isXValid || !isYValid || !isRValid) {
-                    e.preventDefault();
                     showModal('Ошибка', 'Пожалуйста, исправьте ошибки в форме');
                     return false;
                 }
@@ -144,6 +145,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (yInput) {
                     yInput.value = yInput.value.replace(',', '.');
                 }
+
+                // Получаем значения из формы
+                const xValue = parseFloat(document.querySelector('input[name="x"]:checked').value);
+                const yValue = parseFloat(yInput.value);
+                const rValue = parseFloat(rHiddenInput.value);
+
+                // Применяем смещение от ветра
+                if (window.applyWindOffset) {
+                    window.applyWindOffset(xValue, yValue, rValue);
+                }
+
+                return false;
             };
         }
 

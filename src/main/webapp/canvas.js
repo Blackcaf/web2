@@ -10,10 +10,10 @@ const WIND_DIRECTIONS = {
     'Ю': { dx: 0, dy: -1 },     // Юг
     'В': { dx: 1, dy: 0 },      // Восток
     'З': { dx: -1, dy: 0 },     // Запад
-    'С-В': { dx: 0.707, dy: 0.707 },   // Северо-Восток
-    'С-З': { dx: -0.707, dy: 0.707 },  // Северо-Запад
-    'Ю-В': { dx: 0.707, dy: -0.707 },  // Юго-Восток
-    'Ю-З': { dx: -0.707, dy: -0.707 }  // Юго-Запад
+    'СВ': { dx: 0.707, dy: 0.707 },   // Северо-Восток
+    'СЗ': { dx: -0.707, dy: 0.707 },  // Северо-Запад
+    'ЮВ': { dx: 0.707, dy: -0.707 },  // Юго-Восток
+    'ЮЗ': { dx: -0.707, dy: -0.707 }  // Юго-Запад
 };
 
 let cachedWindData = null;
@@ -294,7 +294,6 @@ async function applyWindOffset(x, y, r) {
     if (cachedWindData && cachedWindData.speed && cachedWindData.direction) {
         const speed = cachedWindData.speed;
         const direction = cachedWindData.direction;
-
         const windVector = WIND_DIRECTIONS[direction];
 
         if (windVector) {
@@ -307,20 +306,13 @@ async function applyWindOffset(x, y, r) {
             const newX = x + offsetX;
             const newY = y + offsetY;
 
-            console.log(`Ветер: ${speed} м/с, направление: ${direction}`);
-            console.log(`Исходная точка: (${x.toFixed(2)}, ${y.toFixed(2)})`);
-            console.log(`Смещенная точка: (${newX.toFixed(2)}, ${newY.toFixed(2)})`);
-            console.log(`Смещение: (${offsetX.toFixed(2)}, ${offsetY.toFixed(2)})`);
-
             visualizeWindShift(x, y, newX, newY);
 
             submitPoint(newX, newY, r);
         } else {
-            console.warn('Неизвестное направление ветра:', direction);
             submitPoint(x, y, r);
         }
     } else {
-        console.warn('Данные о ветре недоступны, отправка без смещения');
         submitPoint(x, y, r);
     }
 }
@@ -353,10 +345,10 @@ function displayWindInfo(speed, direction) {
         'Ю': 'Юг',
         'В': 'Восток',
         'З': 'Запад',
-        'С-В': 'Северо-Восток',
-        'С-З': 'Северо-Запад',
-        'Ю-В': 'Юго-Восток',
-        'Ю-З': 'Юго-Запад'
+        'СВ': 'Северо-Восток',
+        'СЗ': 'Северо-Запад',
+        'ЮВ': 'Юго-Восток',
+        'ЮЗ': 'Юго-Запад'
     };
 
     const directionName = directionNames[direction] || direction;
@@ -458,3 +450,4 @@ function submitPoint(x, y, r) {
 }
 
 window.drawCoordinatePlane = drawCoordinatePlane;
+window.applyWindOffset = applyWindOffset;

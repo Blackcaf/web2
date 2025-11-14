@@ -64,13 +64,20 @@ public class WeatherServlet extends HttpServlet {
     private Map<String, Object> parseWindData(String html) {
         Map<String, Object> result = new HashMap<>();
 
-        Pattern pattern = Pattern.compile(">(\\d+(?:,\\d+)?)\\s*м/с,\\s*([А-Я-]+)<");
+        Pattern pattern = Pattern.compile(">(\\d+(?:,\\d+)?)\\s*м/с,\\s*([А-ЯA-Z][А-ЯA-Z–—\\-]*)<");
         Matcher matcher = pattern.matcher(html);
 
         if (matcher.find()) {
             String speedStr = matcher.group(1).replace(",", ".");
             double speed = Double.parseDouble(speedStr);
             String direction = matcher.group(2);
+
+            direction = direction.replace("–", "-").replace("—", "-");
+            direction = direction.replace("-", "");
+            direction = direction.replace("C", "С")
+                               .replace("Z", "З")
+                               .replace("B", "В")
+                               .replace("Y", "Ю");
 
             result.put("speed", speed);
             result.put("direction", direction);
@@ -83,4 +90,3 @@ public class WeatherServlet extends HttpServlet {
         return result;
     }
 }
-
